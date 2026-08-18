@@ -312,5 +312,6 @@ body {
   margin-inline: 5px; 
 }
 #search-count {
+  display: inline;
   padding: 10px;
 }

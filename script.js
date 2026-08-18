@@ -47,7 +47,7 @@ function render() {
       episode.summary.toLowerCase().includes(state.searchTerm.toLowerCase()),
   );
   const searchCount = document.getElementById("search-count");
-  searchCount.textContent = `${filteredEpisodes.length} episode(s) found`;
+  searchCount.textContent = `Displaying ${filteredEpisodes.length}/${state.allEpisodes.length} episode(s)`;
 
   root.innerHTML = filteredEpisodes.map(createEpisodeCard).join("");
 }
