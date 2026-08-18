@@ -41,9 +41,13 @@ function createEpisodeCard(ep) {
   `;
 }
 function render() {
-  const filteredEpisodes = state.allEpisodes.filter((episode) =>
-    episode.name.toLowerCase().includes(state.searchTerm.toLowerCase()),
+  const filteredEpisodes = state.allEpisodes.filter(
+    (episode) =>
+      episode.name.toLowerCase().includes(state.searchTerm.toLowerCase()) ||
+      episode.summary.toLowerCase().includes(state.searchTerm.toLowerCase()),
   );
+  const searchCount = document.getElementById("search-count");
+  searchCount.textContent = `${filteredEpisodes.length} episode(s) found`;
 
   root.innerHTML = filteredEpisodes.map(createEpisodeCard).join("");
 }
