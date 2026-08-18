@@ -305,3 +305,25 @@ body {
     height: 185px;
   }
 }
+
+#search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+
+  margin-left: 25px;
+  margin-bottom: 20px;
+}
+
+#search > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#search-count {
+  display: inline-block;
+  padding: 10px;
+}
