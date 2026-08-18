@@ -307,11 +307,23 @@ body {
 }
 
 #search {
-  display: inline; /* the default for span */
-  padding: 5px;
-  margin-inline: 5px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+
+  margin-left: 25px;
+  margin-bottom: 20px;
 }
+
+#search > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 #search-count {
-  display: inline;
+  display: inline-block;
   padding: 10px;
 }
