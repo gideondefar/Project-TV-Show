@@ -305,3 +305,10 @@ body {
     height: 185px;
   }
 }
+
+#search {
+  display: inline; /* the default for span */
+  padding: 5px;
+  margin-inline: 5px;
+  
+}
