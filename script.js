@@ -51,6 +51,22 @@ function render() {
 
   root.innerHTML = filteredEpisodes.map(createEpisodeCard).join("");
 }
+function populateEpisodeSelect() {
+  const episodeSelect = document.getElementById("episode-select");
+
+  state.allEpisodes.forEach((episode) => {
+    const option = document.createElement("option");
+
+    const seasonNumber = String(episode.season).padStart(2, "0");
+    const episodeNumber = String(episode.number).padStart(2, "0");
+
+    option.value = episode.id;
+    option.textContent = `S${seasonNumber}E${episodeNumber} - ${episode.name}`;
+
+    episodeSelect.appendChild(option);
+  });
+}
+populateEpisodeSelect();
 render();
 const searchInput = document.getElementById("site-search");
 

@@ -309,6 +309,8 @@ body {
 #search {
   display: inline; /* the default for span */
   padding: 5px;
-  margin-inline: 5px;
-  
+  margin-inline: 5px; 
+}
+#search-count {
+  padding: 10px;
 }
