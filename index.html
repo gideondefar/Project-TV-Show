@@ -1,49 +1,38 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TV Show Project | Gideon Defar (gideondefar)</title>
-    <link href="style.css" rel="stylesheet" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-  </head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TV Show Project | Gideon Defar (gideondefar)</title>
+    <link href="style.css" rel="stylesheet" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  </head>
 
-  <body>
-    
-<div id="search"> 
-    <div>
+  <body>
+    <div id="search">
+      <div>
         <select id="episode-select">
-            <option value="">Select an episode</option>
+          <option value="">Select an episode</option>
         </select>
-        <label for="site-search">Search the site:</label>
-        <input type="search" id="site-search" name="q" />
-        <label for="episode-select">Choose an episode:</label>
-        <div id="search-count" >Search count</div>
 
-    <div id="search-count">
-        
+        <input
+          type="search"
+          id="site-search"
+          name="q"
+          placeholder="Search episodes..."
+        />
+
+        <div id="search-count">Loading episodes...</div>
+      </div>
     </div>
-        
-    </div>
-    <div>
-        
-    </div>
-    
 
+    <div id="root"></div>
 
-</div>
-    <div id="root"></div>
-    
+    <footer class="footer">
+      Episode data originally provided by
+      <a href="https://www.tvmaze.com/" target="_blank">TVMaze.com</a>
+    </footer>
 
-    <footer class="footer">
-      Episode data originally provided by
-      <a href="https://www.tvmaze.com/" target="_blank">TVMaze.com</a>
-    </footer>
-
-    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <script src="episodes.js"></script>
-
-    <!-- Loads YOUR javascript code -->
-    <script src="script.js"></script>
-  </body>
+    <script src="script.js"></script>
+  </body>
 </html>
