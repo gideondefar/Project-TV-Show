@@ -310,7 +310,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-
   width: 100%;
 
   margin-left: 25px;
@@ -326,4 +325,13 @@ body {
 #search-count {
   display: inline-block;
   padding: 10px;
+}
+#show-select,
+#episode-select,
+#site-search {
+  height: 25px;
+  padding: 2px 8px;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+  text-align:justify;
 }
