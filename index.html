@@ -33,7 +33,7 @@
         </div>
       </header>
 
-      <p id="show-status">
+      <p id="show-status" aria-live="polite">
         Loading shows, please wait...
       </p>
 
@@ -67,13 +67,19 @@
         </div>
       </div>
 
-      <div id="root"></div>
+      <main id="root"></main>
     </section>
 
     <template id="episode-template">
       <article class="card">
         <h2 class="title"></h2>
-        <img alt="" />
+
+        <img
+          src=""
+          alt=""
+          loading="lazy"
+        />
+
         <div class="content"></div>
       </article>
     </template>
