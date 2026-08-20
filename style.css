@@ -7,22 +7,393 @@
 
 body {
   min-height: 100vh;
-
   font-family: Arial, Helvetica, sans-serif;
-
   overflow-x: hidden;
 
-  background: radial-gradient(
-    circle at top,
-    #252525 0%,
-    #141414 40%,
-    #0b0b0b 100%
-  );
+  background:
+    radial-gradient(
+      circle at top,
+      #252525 0%,
+      #141414 40%,
+      #0b0b0b 100%
+    );
 
   color: white;
-
   padding: 45px 55px;
 }
+
+
+/* =========================
+   SHOWS VIEW
+========================= */
+
+#shows-view {
+  width: 100%;
+}
+
+
+/* =========================
+   SHOW HEADER
+========================= */
+
+.shows-header {
+  width: 100%;
+  max-width: 1600px;
+
+  margin: 0 auto 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.shows-header h1 {
+  font-size: 2rem;
+  color: white;
+  white-space: nowrap;
+}
+
+
+/* =========================
+   SHOW SEARCH + SELECTOR
+========================= */
+
+.shows-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  flex-shrink: 0;
+}
+
+#show-search {
+  width: 280px;
+  height: 38px;
+
+  padding: 8px 12px;
+
+  border: 1px solid #777;
+  border-radius: 5px;
+
+  background: white;
+  color: #222;
+
+  font-size: 0.95rem;
+}
+
+#show-select {
+  width: 180px;
+  height: 38px;
+
+  padding: 7px 10px;
+
+  border: 1px solid #777;
+  border-radius: 5px;
+
+  background: white;
+  color: #222;
+
+  font-size: 0.9rem;
+
+  cursor: pointer;
+}
+
+#show-search:focus,
+#show-select:focus {
+  outline: 2px solid #e50914;
+  outline-offset: 2px;
+
+  border-color: #e50914;
+}
+
+
+/* =========================
+   SHOW STATUS
+========================= */
+
+#show-status {
+  width: 100%;
+  max-width: 1600px;
+
+  margin: 0 auto 20px;
+
+  color: #999;
+  font-size: 0.9rem;
+}
+
+
+/* =========================
+   SHOW GRID
+========================= */
+
+#shows-root {
+  width: 100%;
+  max-width: 1600px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(300px, 1fr)
+    );
+
+  gap: 25px;
+}
+
+
+/* =========================
+   SHOW CARD
+========================= */
+
+.show-card {
+  display: flex;
+  flex-direction: column;
+
+  background:
+    linear-gradient(
+      180deg,
+      #222222 0%,
+      #181818 65%,
+      #111111 100%
+    );
+
+  border-radius: 14px;
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.35);
+
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+}
+
+.show-card:hover {
+  transform: translateY(-7px);
+
+  border-color: rgba(229, 9, 20, 0.5);
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.7);
+}
+
+
+/* =========================
+   SHOW IMAGE
+========================= */
+
+.show-card > img {
+  width: 100%;
+  height: 300px;
+
+  object-fit: cover;
+  display: block;
+
+  background: #111;
+}
+
+
+/* =========================
+   SHOW CONTENT
+========================= */
+
+.show-content {
+  padding: 18px;
+}
+
+.show-title {
+  margin-bottom: 12px;
+
+  font-size: 1.2rem;
+  color: white;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.show-title:hover {
+  color: #e50914;
+  text-decoration: underline;
+}
+
+.show-title:focus {
+  outline: 2px solid #e50914;
+  outline-offset: 4px;
+}
+
+
+/* =========================
+   SHOW SUMMARY
+========================= */
+
+.show-summary {
+  color: #a9a9a9;
+
+  font-size: 0.85rem;
+  line-height: 1.55;
+
+  margin-bottom: 15px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
+
+/* =========================
+   SHOW DETAILS
+========================= */
+
+.show-details {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  padding-top: 12px;
+
+  color: #999;
+
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+.show-details p {
+  margin: 0;
+}
+
+.show-details strong {
+  color: #ddd;
+}
+
+
+/* =========================
+   EPISODE CONTROLS
+========================= */
+
+#search {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  margin-bottom: 25px;
+}
+
+
+/* =========================
+   BACK BUTTON
+========================= */
+
+#back-to-shows {
+  height: 32px;
+
+  padding: 4px 12px;
+
+  border: 1px solid #777;
+  border-radius: 5px;
+
+  background: #222;
+  color: white;
+
+  cursor: pointer;
+
+  font-size: 0.85rem;
+}
+
+#back-to-shows:hover {
+  background: #333;
+  border-color: #e50914;
+}
+
+#back-to-shows:focus {
+  outline: 2px solid #e50914;
+  outline-offset: 2px;
+}
+
+
+/* =========================
+   EPISODE SELECTOR
+========================= */
+
+#episode-select {
+  width: 230px;
+  height: 32px;
+
+  padding: 4px 8px;
+
+  border: 1px solid #777;
+  border-radius: 4px;
+
+  background: white;
+  color: #222;
+
+  font-size: 0.9rem;
+
+  cursor: pointer;
+}
+
+#episode-select:focus {
+  outline: 2px solid #e50914;
+  outline-offset: 2px;
+
+  border-color: #e50914;
+}
+
+
+/* =========================
+   EPISODE SEARCH
+========================= */
+
+#site-search {
+  width: 220px;
+  height: 32px;
+
+  padding: 4px 8px;
+
+  border: 1px solid #777;
+  border-radius: 4px;
+
+  background: white;
+  color: #222;
+
+  font-size: 0.9rem;
+}
+
+#site-search:focus {
+  outline: 2px solid #e50914;
+  outline-offset: 2px;
+
+  border-color: #e50914;
+}
+
+
+/* =========================
+   EPISODE COUNT
+========================= */
+
+#search-count {
+  color: #999;
+
+  font-size: 0.85rem;
+
+  white-space: nowrap;
+}
+
 
 /* =========================
    EPISODE GRID
@@ -36,7 +407,11 @@ body {
 
   display: grid;
 
-  grid-template-columns: repeat(auto-fill, minmax(240px, 280px));
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(240px, 280px)
+    );
 
   gap: 30px 22px;
 
@@ -44,8 +419,9 @@ body {
   align-items: start;
 }
 
+
 /* =========================
-   CARD
+   EPISODE CARD
 ========================= */
 
 .card {
@@ -58,10 +434,15 @@ body {
 
   min-height: 390px;
 
-  background: linear-gradient(180deg, #222222 0%, #181818 65%, #111111 100%);
+  background:
+    linear-gradient(
+      180deg,
+      #222222 0%,
+      #181818 65%,
+      #111111 100%
+    );
 
   border-radius: 14px;
-
   overflow: hidden;
 
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -70,17 +451,16 @@ body {
     0 8px 20px rgba(0, 0, 0, 0.45),
     0 2px 6px rgba(0, 0, 0, 0.35);
 
-  cursor: pointer;
-
   transition:
     transform 0.28s ease,
     box-shadow 0.28s ease,
     border-color 0.28s ease;
 }
 
-/* Card hover */
 .card:hover {
-  transform: translateY(-10px) scale(1.035);
+  transform:
+    translateY(-10px)
+    scale(1.035);
 
   border-color: rgba(229, 9, 20, 0.5);
 
@@ -91,8 +471,9 @@ body {
   z-index: 5;
 }
 
+
 /* =========================
-   IMAGE
+   EPISODE IMAGE
 ========================= */
 
 .card img {
@@ -100,8 +481,9 @@ body {
   height: 170px;
 
   object-fit: cover;
-
   display: block;
+
+  background: #111;
 
   filter: brightness(0.9);
 
@@ -112,12 +494,12 @@ body {
 
 .card:hover img {
   transform: scale(1.05);
-
   filter: brightness(1);
 }
 
+
 /* =========================
-   TITLE
+   EPISODE TITLE
 ========================= */
 
 .title {
@@ -128,7 +510,7 @@ body {
 
   line-height: 1.35;
 
-  color: #ffffff;
+  color: white;
 
   min-height: 65px;
 
@@ -140,8 +522,9 @@ body {
   overflow: hidden;
 }
 
+
 /* =========================
-   SUMMARY
+   EPISODE SUMMARY
 ========================= */
 
 .content {
@@ -150,7 +533,6 @@ body {
   color: #a9a9a9;
 
   font-size: 0.84rem;
-
   line-height: 1.55;
 
   flex: 1;
@@ -167,8 +549,9 @@ body {
   margin: 0;
 }
 
+
 /* =========================
-   RED NETFLIX-LIKE ACCENT
+   RED ACCENT
 ========================= */
 
 .card::after {
@@ -191,6 +574,7 @@ body {
   width: 100%;
 }
 
+
 /* =========================
    FOOTER
 ========================= */
@@ -199,7 +583,6 @@ body {
   text-align: center;
 
   margin-top: 50px;
-
   padding: 20px;
 
   color: #777;
@@ -209,13 +592,13 @@ body {
 
 .footer a {
   color: #e50914;
-
   text-decoration: none;
 }
 
 .footer a:hover {
   text-decoration: underline;
 }
+
 
 /* =========================
    TABLET
@@ -226,14 +609,46 @@ body {
     padding: 35px;
   }
 
+  .shows-header {
+    align-items: center;
+  }
+
+  .shows-controls {
+    flex: 1;
+  }
+
+  #show-search {
+    flex: 1;
+    width: auto;
+  }
+
+  #show-select {
+    width: 180px;
+  }
+
+  #shows-root {
+    grid-template-columns:
+      repeat(
+        auto-fill,
+        minmax(260px, 1fr)
+      );
+  }
+
   #root {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 260px));
+    grid-template-columns:
+      repeat(
+        auto-fill,
+        minmax(220px, 260px)
+      );
 
     gap: 28px 20px;
+  }
 
-    justify-content: center;
+  #search {
+    flex-wrap: wrap;
   }
 }
+
 
 /* =========================
    MOBILE
@@ -244,18 +659,69 @@ body {
     padding: 20px;
   }
 
+  .shows-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .shows-controls {
+    width: 100%;
+    flex-direction: row;
+  }
+
+  #show-search {
+    width: auto;
+    flex: 1;
+  }
+
+  #show-select {
+    width: 150px;
+  }
+
+  #shows-root {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .show-card > img {
+    height: 260px;
+  }
+
+
+  /* Episode controls */
+
+  #search {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #back-to-shows,
+  #episode-select,
+  #site-search {
+    width: 100%;
+  }
+
+  #search-count {
+    white-space: normal;
+    text-align: center;
+  }
+
+
+  /* Episode grid */
+
   #root {
-    grid-template-columns: minmax(0, 320px);
+    grid-template-columns:
+      minmax(0, 320px);
 
     justify-content: center;
 
     gap: 25px;
+
     padding: 10px;
   }
 
   .card {
     width: 100%;
-
     min-height: auto;
   }
 
@@ -278,15 +744,17 @@ body {
   }
 
   .card:hover {
-    transform: translateY(-5px) scale(1.01);
+    transform:
+      translateY(-5px)
+      scale(1.01);
   }
 
   .footer {
     margin-top: 35px;
-
     padding: 15px;
   }
 }
+
 
 /* =========================
    VERY SMALL PHONES
@@ -295,6 +763,15 @@ body {
 @media (max-width: 360px) {
   body {
     padding: 14px;
+  }
+
+  .shows-controls {
+    flex-direction: column;
+  }
+
+  #show-search,
+  #show-select {
+    width: 100%;
   }
 
   #root {
@@ -306,32 +783,21 @@ body {
   }
 }
 
-#search {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
 
-  margin-left: 25px;
-  margin-bottom: 20px;
-}
+/* =========================
+   REDUCED MOTION
+========================= */
 
-#search > div {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto;
+  }
 
-#search-count {
-  display: inline-block;
-  padding: 10px;
-}
-#show-select,
-#episode-select,
-#site-search {
-  height: 25px;
-  padding: 2px 8px;
-  font-size: 0.9rem;
-  box-sizing: border-box;
-  text-align:justify;
+  .show-card,
+  .card,
+  .card img,
+  .card::after,
+  .show-title {
+    transition: none;
+  }
 }
