@@ -161,7 +161,13 @@ function populateShowSelector(shows) {
     <option value="">All Shows</option>
   `;
 
-  shows.forEach((show) => {
+  const sortedShows = [...shows].sort((a, b) =>
+    a.name.localeCompare(b.name, undefined, {
+      sensitivity: "base",
+    })
+  );
+
+  sortedShows.forEach((show) => {
     const option = document.createElement("option");
 
     option.value = String(show.id);
