@@ -1,5 +1,9 @@
 const API_BASE = "https://api.tvmaze.com";
 
+/* =========================
+   DOM ELEMENTS
+========================= */
+
 const showsView = document.querySelector("#shows-view");
 const episodesView = document.querySelector("#episodes-view");
 
@@ -14,14 +18,33 @@ const siteSearch = document.querySelector("#site-search");
 const searchCount = document.querySelector("#search-count");
 const root = document.querySelector("#root");
 
-const episodeTemplate = document.querySelector("#episode-template");
+const episodeTemplate =
+  document.querySelector("#episode-template");
+
+
+/* =========================
+   APPLICATION STATE
+========================= */
 
 let allShows = [];
 let currentShow = null;
 let currentEpisodes = [];
 
-let showsLoaded = false;
-const episodeCache = new Map();
+
+/*
+  Every API request is stored by URL.
+
+  The cache stores the Promise immediately.
+  This means:
+  - A URL is fetched only once.
+  - If another part of the application asks
+    for the same URL while it is still loading,
+    it receives the same Promise.
+  - Returning to a previously viewed show
+    does not fetch its episodes again.
+*/
+const requestCache = new Map();
+
 
 /* =========================
    HELPERS
@@ -29,33 +52,69 @@ const episodeCache = new Map();
 
 function stripHtml(html = "") {
   const div = document.createElement("div");
+
   div.innerHTML = html;
+
   return div.textContent || div.innerText || "";
 }
 
+
 function escapeHtml(text = "") {
   const div = document.createElement("div");
+
   div.textContent = text;
+
   return div.innerHTML;
 }
 
-function getImage(image, fallback = "https://via.placeholder.com/300x450?text=No+Image") {
-  return image?.medium || image?.original || fallback;
+
+function getImage(
+  image,
+  fallback =
+    "https://via.placeholder.com/300x450?text=No+Image"
+) {
+  return (
+    image?.medium ||
+    image?.original ||
+    fallback
+  );
 }
 
 
 /* =========================
-   API
+   API REQUEST CACHE
 ========================= */
 
-async function fetchJson(url) {
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`Request failed: ${response.status}`);
+function fetchJson(url) {
+  /*
+    If this exact URL has already been requested,
+    return the existing Promise instead of making
+    another network request.
+  */
+  if (requestCache.has(url)) {
+    return requestCache.get(url);
   }
 
-  return response.json();
+  const request = fetch(url).then((response) => {
+    if (!response.ok) {
+      throw new Error(
+        `Request failed: ${response.status}`
+      );
+    }
+
+    return response.json();
+  });
+
+  /*
+    Store the Promise immediately.
+
+    This prevents duplicate requests even if
+    fetchJson() is called again before the
+    first request has finished.
+  */
+  requestCache.set(url, request);
+
+  return request;
 }
 
 
@@ -64,16 +123,13 @@ async function fetchJson(url) {
 ========================= */
 
 async function loadShows() {
-  showStatus.textContent = "Loading shows, please wait...";
+  showStatus.textContent =
+    "Loading shows, please wait...";
 
   try {
-    /*
-      This URL is fetched only once during the visit.
-    */
-    if (!showsLoaded) {
-      allShows = await fetchJson(`${API_BASE}/shows`);
-      showsLoaded = true;
-    }
+    const url = `${API_BASE}/shows`;
+
+    allShows = await fetchJson(url);
 
     populateShowSelector(allShows);
 
@@ -125,47 +181,55 @@ function filterShows() {
     .trim()
     .toLowerCase();
 
-  const selectedShowId = showSelect.value;
+  const selectedShowId =
+    showSelect.value;
 
   let filteredShows = allShows;
 
+
   /*
-    First apply selector.
+    Filter by show selector.
   */
+
   if (selectedShowId) {
     filteredShows = filteredShows.filter(
-      (show) => String(show.id) === selectedShowId
+      (show) =>
+        String(show.id) === selectedShowId
     );
   }
 
-  /*
-    Then apply text search.
 
-    Search checks:
+  /*
+    Filter by:
     - show name
     - genres
     - summary
   */
+
   if (searchTerm) {
-    filteredShows = filteredShows.filter((show) => {
-      const name = show.name?.toLowerCase() || "";
+    filteredShows = filteredShows.filter(
+      (show) => {
+        const name =
+          show.name?.toLowerCase() || "";
 
-      const genres =
-        show.genres
-          ?.join(" ")
-          .toLowerCase() || "";
+        const genres =
+          show.genres
+            ?.join(" ")
+            .toLowerCase() || "";
 
-      const summary =
-        stripHtml(show.summary)
-          .toLowerCase();
+        const summary =
+          stripHtml(show.summary)
+            .toLowerCase();
 
-      return (
-        name.includes(searchTerm) ||
-        genres.includes(searchTerm) ||
-        summary.includes(searchTerm)
-      );
-    });
+        return (
+          name.includes(searchTerm) ||
+          genres.includes(searchTerm) ||
+          summary.includes(searchTerm)
+        );
+      }
+    );
   }
+
 
   renderShows(filteredShows);
 
@@ -192,9 +256,11 @@ function renderShows(shows) {
   }
 
   shows.forEach((show) => {
-    const article = document.createElement("article");
+    const article =
+      document.createElement("article");
 
     article.className = "show-card";
+
 
     const image = getImage(show.image);
 
@@ -216,6 +282,7 @@ function renderShows(shows) {
     const runtime =
       show.runtime ?? "N/A";
 
+
     article.innerHTML = `
       <img
         src="${image}"
@@ -225,13 +292,13 @@ function renderShows(shows) {
 
       <div class="show-content">
 
-        <h2
-          class="show-title"
-          tabindex="0"
-          role="button"
-          data-show-id="${show.id}"
-        >
-          ${escapeHtml(show.name)}
+        <h2>
+          <button
+            class="show-title"
+            type="button"
+          >
+            ${escapeHtml(show.name)}
+          </button>
         </h2>
 
         <p class="show-summary">
@@ -265,21 +332,15 @@ function renderShows(shows) {
       </div>
     `;
 
-    const title = article.querySelector(".show-title");
+
+    const title =
+      article.querySelector(".show-title");
+
 
     title.addEventListener("click", () => {
       openShow(show);
     });
 
-    title.addEventListener("keydown", (event) => {
-      if (
-        event.key === "Enter" ||
-        event.key === " "
-      ) {
-        event.preventDefault();
-        openShow(show);
-      }
-    });
 
     showsRoot.appendChild(article);
   });
@@ -296,30 +357,40 @@ async function openShow(show) {
   showsView.hidden = true;
   episodesView.hidden = false;
 
+
   /*
     Reset episode controls when opening
     a different show.
   */
+
   siteSearch.value = "";
   episodeSelect.value = "";
 
   root.innerHTML = `
-    <p>Loading episodes, please wait...</p>
+    <p>
+      Loading episodes, please wait...
+    </p>
   `;
 
   searchCount.textContent =
     "Loading episodes...";
 
+
   try {
-    const episodes = await getEpisodes(show.id);
+    const episodes =
+      await getEpisodes(show.id);
 
     currentEpisodes = episodes;
 
-    populateEpisodeSelector(episodes);
+    populateEpisodeSelector(
+      episodes
+    );
 
     renderEpisodes(episodes);
 
-    updateEpisodeCount(episodes.length);
+    updateEpisodeCount(
+      episodes.length
+    );
   } catch (error) {
     console.error(error);
 
@@ -337,31 +408,21 @@ async function openShow(show) {
 
 
 /* =========================
-   EPISODE CACHE
+   GET EPISODES
 ========================= */
 
-async function getEpisodes(showId) {
-  /*
-    Important Level 500 requirement:
-
-    During one visit, never fetch the same
-    URL more than once.
-
-    We therefore cache episodes by show ID.
-  */
-
-  if (episodeCache.has(showId)) {
-    return episodeCache.get(showId);
-  }
-
+function getEpisodes(showId) {
   const url =
     `${API_BASE}/shows/${showId}/episodes`;
 
-  const episodes = await fetchJson(url);
+  /*
+    fetchJson() handles all caching.
 
-  episodeCache.set(showId, episodes);
+    The same URL will never be fetched
+    more than once during this visit.
+  */
 
-  return episodes;
+  return fetchJson(url);
 }
 
 
@@ -369,22 +430,30 @@ async function getEpisodes(showId) {
    EPISODE SELECTOR
 ========================= */
 
-function populateEpisodeSelector(episodes) {
+function populateEpisodeSelector(
+  episodes
+) {
   episodeSelect.innerHTML = `
     <option value="">
       Select an episode
     </option>
   `;
 
-  episodes.forEach((episode, index) => {
-    const option = document.createElement("option");
+  episodes.forEach((episode) => {
+    const option =
+      document.createElement("option");
 
-    option.value = String(episode.id);
+    option.value =
+      String(episode.id);
 
     option.textContent =
-      `S${String(episode.season).padStart(2, "0")}E${String(
-        episode.number
-      ).padStart(2, "0")} - ${episode.name}`;
+      `S${String(episode.season).padStart(
+        2,
+        "0"
+      )}E${String(episode.number).padStart(
+        2,
+        "0"
+      )} - ${episode.name}`;
 
     episodeSelect.appendChild(option);
   });
@@ -396,18 +465,22 @@ function populateEpisodeSelector(episodes) {
 ========================= */
 
 function filterEpisodes() {
-  const searchTerm = siteSearch.value
-    .trim()
-    .toLowerCase();
+  const searchTerm =
+    siteSearch.value
+      .trim()
+      .toLowerCase();
 
   const selectedEpisodeId =
     episodeSelect.value;
 
-  let filteredEpisodes = currentEpisodes;
+  let filteredEpisodes =
+    currentEpisodes;
+
 
   /*
-    Episode selector.
+    Filter by episode selector.
   */
+
   if (selectedEpisodeId) {
     filteredEpisodes =
       filteredEpisodes.filter(
@@ -417,27 +490,38 @@ function filterEpisodes() {
       );
   }
 
+
   /*
-    Free-text episode search.
+    Filter by:
+    - episode name
+    - episode summary
   */
+
   if (searchTerm) {
     filteredEpisodes =
-      filteredEpisodes.filter((episode) => {
-        const name =
-          episode.name?.toLowerCase() || "";
+      filteredEpisodes.filter(
+        (episode) => {
+          const name =
+            episode.name?.toLowerCase() ||
+            "";
 
-        const summary =
-          stripHtml(episode.summary)
-            .toLowerCase();
+          const summary =
+            stripHtml(
+              episode.summary
+            ).toLowerCase();
 
-        return (
-          name.includes(searchTerm) ||
-          summary.includes(searchTerm)
-        );
-      });
+          return (
+            name.includes(searchTerm) ||
+            summary.includes(searchTerm)
+          );
+        }
+      );
   }
 
-  renderEpisodes(filteredEpisodes);
+
+  renderEpisodes(
+    filteredEpisodes
+  );
 
   updateEpisodeCount(
     filteredEpisodes.length
@@ -450,7 +534,8 @@ function filterEpisodes() {
 ========================= */
 
 function updateEpisodeCount(count) {
-  const total = currentEpisodes.length;
+  const total =
+    currentEpisodes.length;
 
   searchCount.textContent =
     `Displaying ${count}/${total} episodes`;
@@ -461,7 +546,9 @@ function updateEpisodeCount(count) {
    RENDER EPISODES
 ========================= */
 
-function renderEpisodes(episodes) {
+function renderEpisodes(
+  episodes
+) {
   root.innerHTML = "";
 
   if (episodes.length === 0) {
@@ -474,9 +561,12 @@ function renderEpisodes(episodes) {
     return;
   }
 
+
   episodes.forEach((episode) => {
     const fragment =
-      episodeTemplate.content.cloneNode(true);
+      episodeTemplate.content
+        .cloneNode(true);
+
 
     const article =
       fragment.querySelector(".card");
@@ -490,10 +580,16 @@ function renderEpisodes(episodes) {
     const content =
       fragment.querySelector(".content");
 
+
     title.textContent =
-      `S${String(episode.season).padStart(2, "0")}E${String(
-        episode.number
-      ).padStart(2, "0")} - ${episode.name}`;
+      `S${String(episode.season).padStart(
+        2,
+        "0"
+      )}E${String(episode.number).padStart(
+        2,
+        "0"
+      )} - ${episode.name}`;
+
 
     image.src =
       getImage(episode.image);
@@ -501,12 +597,17 @@ function renderEpisodes(episodes) {
     image.alt =
       `${episode.name} episode image`;
 
+
     const summary =
-      stripHtml(episode.summary) ||
+      stripHtml(
+        episode.summary
+      ) ||
       "No summary available.";
+
 
     content.innerHTML =
       `<p>${escapeHtml(summary)}</p>`;
+
 
     root.appendChild(fragment);
   });
@@ -520,12 +621,6 @@ function renderEpisodes(episodes) {
 function showShowsView() {
   episodesView.hidden = true;
   showsView.hidden = false;
-
-  /*
-    Keep the user's show search/selector state.
-    This makes returning to the show listing
-    predictable instead of unexpectedly resetting it.
-  */
 }
 
 
@@ -533,9 +628,11 @@ function showShowsView() {
    EVENT LISTENERS
 ========================= */
 
+
 /*
   Show text search
 */
+
 showSearch.addEventListener(
   "input",
   filterShows
@@ -544,9 +641,8 @@ showSearch.addEventListener(
 
 /*
   Show selector
-
-  THIS is what makes the selector work.
 */
+
 showSelect.addEventListener(
   "change",
   filterShows
@@ -556,6 +652,7 @@ showSelect.addEventListener(
 /*
   Episode text search
 */
+
 siteSearch.addEventListener(
   "input",
   filterEpisodes
@@ -565,6 +662,7 @@ siteSearch.addEventListener(
 /*
   Episode selector
 */
+
 episodeSelect.addEventListener(
   "change",
   filterEpisodes
@@ -574,6 +672,7 @@ episodeSelect.addEventListener(
 /*
   Back to shows
 */
+
 backToShows.addEventListener(
   "click",
   showShowsView
